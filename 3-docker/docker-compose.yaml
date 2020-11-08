@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  microservice-a:
+    image: johnkgs/microservice-a
+    ports:
+      - 9090:9090
+
+  microservice-b:
+    image: johnkgs/microservice-b
+    restart: on-failure
+    depends_on:
+      - rabbit
+
+  microservice-c:
+    image: johnkgs/microservice-c
+    ports:
+      - 9092:9092
+
+  rabbit:
+    image: 'rabbitmq:3-management'
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'SWQOKODSQALRPCLNMEQG'
+      RABBITMQ_DEFAULT_USER: 'rabbitmq'
+      RABBITMQ_DEFAULT_PASS: 'rabbitmq'
+      RABBITMQ_DEFAULT_VHOST: '/'
+    volumes:
+      - ./rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json
+    ports:
+      - 15672:15672
+      - 5672:5672
